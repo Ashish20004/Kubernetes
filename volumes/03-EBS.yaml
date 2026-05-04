@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ebs-static
+spec:
+  accessModes:
+  - ReadwriteOnce
+  capacity:
+    storage: 2Gi
+  csi:
+    driver: ebs.csi.aws.com
+    fsType: ext4
+    volumeHandle: vol-0c1a2b3c4d5e6f7g8 # replace with the actually voulem id of your EBS volume
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ebs-claim
+spec:
+  storageClassName: ""
+  VolumeName: ebs-static
+  accessModes:
+  - ReadwriteOnce
+  resources:
+    requests:
+      storage: 2GI
+  
+---
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: ebs-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    volumeMounts:
+    - name: ebs-volume
+      mountPath: /usr/share/nginx/html
+  nodeSelector:
+    topology.kubernetes.io/zone: us-east-1a # replace with the actual availability zone of your EBS volume
+  volumes:
+  - name: ebs-volume
+    persistentVolumeClaim:
+      claimName: ebs-claim
