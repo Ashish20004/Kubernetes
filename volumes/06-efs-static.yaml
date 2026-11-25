@@ -19,7 +19,7 @@ kind: PersistentVolumeClaim
 metadata: 
   name: efs-static
 spec:
-  accessMode:
+  accessModes:
     - ReadWriteOnce
   storageClassName: ""
   resources:
