@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: frontend
+  labels:
+    name: roboshop
+    component: frontend
+    environment: dev
+spec:
+  # modify replicas according to your case
+  replicas: 3
+  selector:
+    matchLabels:
+       name: roboshop
+       component: frontend
+       environment: dev
+  template:
+    metadata:
+      labels:
+         name: roboshop
+         component: frontend
+         environment: dev
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
